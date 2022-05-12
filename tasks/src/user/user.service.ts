@@ -21,9 +21,10 @@ export class UserService {
       .getOne();
   }
 
-  async register(createUserDto: CreateUserDto): Promise<User> {
+  /** Добавить пользователя */
+  async create(createUserDto: CreateUserDto): Promise<User> {
     // Пока пользователи могут создаваться только одним событием,
-    // по этому нет смысла делать insertOrUpdate
+    // по этому нет смысла делать InsertOrUpdate
     return this.userRepository.save({
       public_id: createUserDto.id,
       name: createUserDto.name,

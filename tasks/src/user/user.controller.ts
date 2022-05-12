@@ -24,9 +24,13 @@ export class UserController implements OnModuleInit, OnModuleDestroy {
     this.messageBroker.close();
   }
 
+  /**
+   * Обработчик перехватываемых событий из очереди CUD-событий
+   * изменения пользователей (в нашем случае только регистрации)
+   */
   @EventPattern('user-stream')
   async handlerUsers(payload: any) {
     console.log(JSON.stringify(payload));
-    this.userService.register(payload.value);
+    this.userService.create(payload.value);
   }
 }

@@ -10,7 +10,7 @@ type SuccessResponse = { status: 'ok' };
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
-  /** Получить (все открытые) задачи */
+  /** Web API: Получить (все открытые) задачи */
   @Get()
   findAll(): Promise<Task[]> {
     // @todo проверять роль и если исполнитель,
@@ -18,20 +18,20 @@ export class TaskController {
     return this.taskService.findAll();
   }
 
-  /** Добавить задачу */
+  /** Web API: Добавить задачу */
   @Post('add')
   add(@Body() addTaskDto: CreateTaskDto): Promise<Task> {
     return this.taskService.add(addTaskDto);
   }
 
-  /** Переназначить все задачи */
+  /** Web API: Переназначить все задачи */
   @Post('shuffle')
   async shuffle(): Promise<SuccessResponse> {
     await this.taskService.shuffle();
     return { status: 'ok' };
   }
 
-  /** Отметить выполненной */
+  /** Web API: Отметить выполненной */
   @Get('mark-completed/:id')
   markCompleted(@Param('id') taskId: number) {
     // пока сессии нет использую заранее выбранного пользователя
