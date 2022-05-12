@@ -2,7 +2,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { TaskModule } from './task/task.module';
+import { UserModule } from './user/user.module';
 import { Task } from './task/task.entity';
+import { User } from './user/user.entity';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -12,10 +15,11 @@ import { Task } from './task/task.entity';
       username: 'edu_tasks',
       password: 'edu_tasks',
       database: 'edu_tasks',
-      entities: [Task],
+      entities: [Task, User],
       synchronize: true,
     }),
     TaskModule,
+    UserModule,
   ],
 })
 export class AppModule {}

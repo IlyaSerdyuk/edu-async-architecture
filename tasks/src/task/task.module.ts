@@ -30,5 +30,6 @@ import { TaskBroker } from './task.broker';
   ],
   providers: [TaskService, TaskBroker, UserService],
   controllers: [TaskController],
+  exports: [ClientsModule],
 })
 export class TaskModule {}
