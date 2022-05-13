@@ -32,3 +32,18 @@ services:
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+
+  mysql:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: edu_tasks
+      MYSQL_DATABASE: edu_tasks
+      MYSQL_USER: edu_tasks
+      MYSQL_PASSWORD: edu_tasks
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+    ports:
+      - '3308:3306'
