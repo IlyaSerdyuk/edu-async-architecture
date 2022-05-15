@@ -1,9 +1,11 @@
+import { User } from 'src/user/user.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   Generated,
+  ManyToOne,
 } from 'typeorm';
 
 @Entity()
@@ -18,12 +20,12 @@ export class Task {
   @Column()
   title: string;
 
-  @Column()
-  user: string;
-
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
   @Column({ type: 'timestamp', nullable: true })
   completed: Date;
+
+  @ManyToOne(() => User, (user) => user.tasks)
+  user: User;
 }
