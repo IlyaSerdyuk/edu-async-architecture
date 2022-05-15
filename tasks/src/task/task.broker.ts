@@ -15,9 +15,9 @@ export class TaskBroker {
   /** Отправить CUD-событие «Добавлена задача» */
   added(task: Task) {
     this.messageBroker.emit('task-stream', {
-      key: 'TaskAdded',
+      key: 'TaskCreated',
       value: {
-        id: task.public_id,
+        task_id: task.public_id,
         title: task.title,
       },
     });
