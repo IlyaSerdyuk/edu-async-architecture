@@ -21,11 +21,8 @@ export class User {
   @Column()
   name: string;
 
-  @Column({
-    type: 'enum',
-    enum: UserRoles,
-  })
-  role: string;
+  @Column()
+  role: UserRoles | string;
 
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
