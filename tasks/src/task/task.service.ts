@@ -37,7 +37,7 @@ export class TaskService {
     const user = await this.userService.findRandom();
     const task = await this.taskRepository.save({
       ...createTaskDto,
-      user: user.public_id,
+      user,
     });
 
     this.taskBroker.added(task);
@@ -59,7 +59,7 @@ export class TaskService {
     await Promise.all(
       tasks.map(async (task) => {
         const user = await this.userService.findRandom();
-        task.user = user.public_id;
+        task.user = user;
         await this.taskRepository.save(task);
       }),
     );
