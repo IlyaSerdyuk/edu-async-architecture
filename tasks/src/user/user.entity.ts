@@ -11,7 +11,7 @@ export class User {
   public_id: string;
 
   @Column()
-  title: string;
+  name: string;
 
   @Column({
     type: 'enum',

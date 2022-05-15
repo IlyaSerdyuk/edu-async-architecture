@@ -22,7 +22,7 @@ export class Task {
   user: string;
 
   @CreateDateColumn({ type: 'timestamp' })
-  created: Date;
+  created_at: Date;
 
   @Column({ type: 'timestamp', nullable: true })
   completed: Date;
