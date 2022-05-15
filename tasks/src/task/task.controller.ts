@@ -35,10 +35,11 @@ export class TaskController {
   /** Web API: Отметить выполненной */
   @Get('mark-completed/:id')
   @Roles(UserRoles.Worker)
-  markCompleted(
+  async markCompleted(
     @User() user,
     @Param('id') taskId: number,
-  ) {
-    return this.taskService.markCompleted({ taskId, userId: user.id });
+  ): Promise<{ complete: number }> {
+    const complete = await this.taskService.markCompleted({ taskId, userId: user.id });
+    return { complete };
   }
 }

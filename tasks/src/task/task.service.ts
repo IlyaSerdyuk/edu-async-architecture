@@ -70,7 +70,7 @@ export class TaskService {
   }
 
   /** Отметить выполненной */
-  async markCompleted({ taskId, userId }) {
+  async markCompleted({ taskId, userId }): Promise<0 | 1> {
     const task = await this.taskRepository.findOne(taskId);
     if (!task) {
       throw new Error('Task not found');
@@ -82,7 +82,7 @@ export class TaskService {
 
     if (task.completed) {
       // Возможно, стоит как-то особенно обрабатывать задвоение
-      return true;
+      return 0;
     }
 
     task.completed = new Date();
@@ -90,6 +90,6 @@ export class TaskService {
     await this.taskRepository.save(task);
     this.taskBroker.completed(task);
 
-    return true;
+    return 1;
   }
 }
