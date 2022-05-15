@@ -1,36 +1,27 @@
-import { ClientKafka, EventPattern } from '@nestjs/microservices';
+import { Controller } from '@nestjs/common';
+import { Ctx, KafkaContext, MessagePattern } from '@nestjs/microservices';
+
+import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
-import {
-  Controller,
-  Inject,
-  Injectable,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
 
 @Controller()
-@Injectable()
-export class UserController implements OnModuleInit, OnModuleDestroy {
-  constructor(
-    @Inject('message-broker') private readonly messageBroker: ClientKafka,
-    private readonly userService: UserService,
-  ) {}
-
-  onModuleInit() {
-    this.messageBroker.subscribeToResponseOf('user-stream');
-  }
-
-  onModuleDestroy() {
-    this.messageBroker.close();
-  }
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   /**
    * Обработчик перехватываемых событий из очереди CUD-событий
    * изменения пользователей (в нашем случае только регистрации)
    */
-  @EventPattern('user-stream')
-  async handlerUsers(payload: any) {
-    console.log(JSON.stringify(payload));
-    this.userService.create(payload.value);
+  @MessagePattern('users-stream')
+  async handlerUserStream(@Ctx() context: KafkaContext) {
+    const message = context.getMessage();
+    switch (`${message.key}`) {
+      case 'UserCreated':
+        this.userService.create(message.value as unknown as CreateUserDto);
+        break;
+      default:
+        console.log(`Unknown key ${message.key} in topic users-stream`);
+        break;
+    }
   }
 }
