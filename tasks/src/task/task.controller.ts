@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-
-import { User } from '../auth/auth-user.decorator';
-import { TaskService } from './task.service';
-import { Task } from './task.entity';
-import { CreateTaskDto } from './dto/create-task.dto';
 import { Roles } from 'src/auth/auth-roles.decorator';
 import { UserRoles } from 'src/user/roles.enum';
+
+import { User } from '../auth/auth-user.decorator';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { Task } from './task.entity';
+import { TaskService } from './task.service';
 
 @Controller('')
 export class TaskController {
@@ -39,7 +39,10 @@ export class TaskController {
     @User() user,
     @Param('id') taskId: number,
   ): Promise<{ complete: number }> {
-    const complete = await this.taskService.markCompleted({ taskId, userId: user.id });
+    const complete = await this.taskService.markCompleted({
+      taskId,
+      userId: user.id,
+    });
     return { complete };
   }
 }
