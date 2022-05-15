@@ -1,8 +1,11 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
+import { User } from '../auth/auth-user.decorator';
 import { TaskService } from './task.service';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { Roles } from 'src/auth/auth-roles.decorator';
+import { UserRoles } from 'src/user/roles.enum';
 
 @Controller('')
 export class TaskController {
@@ -10,10 +13,9 @@ export class TaskController {
 
   /** Web API: Получить (все открытые) задачи */
   @Get()
-  findAll(): Promise<Task[]> {
-    // @todo проверять роль и если исполнитель,
-    // то подставлять в запрос его публичный идентификатор
-    return this.taskService.findAll();
+  findAll(@User() user): Promise<Task[]> {
+    const options = user.role !== UserRoles.Admin ? user.id : undefined;
+    return this.taskService.findAll(options);
   }
 
   /** Web API: Добавить задачу */
@@ -24,6 +26,7 @@ export class TaskController {
 
   /** Web API: Переназначить все задачи */
   @Post('shuffle')
+  @Roles(UserRoles.Admin)
   async shuffle(): Promise<{ complete: number }> {
     const complete = await this.taskService.shuffle();
     return { complete };
@@ -31,9 +34,11 @@ export class TaskController {
 
   /** Web API: Отметить выполненной */
   @Get('mark-completed/:id')
-  markCompleted(@Param('id') taskId: number) {
-    // пока сессии нет использую заранее выбранного пользователя
-    const userId = '1eb400a8-ffb3-4976-8160-825eaceb82aa';
-    return this.taskService.markCompleted({ taskId, userId });
+  @Roles(UserRoles.Worker)
+  markCompleted(
+    @User() user,
+    @Param('id') taskId: number,
+  ) {
+    return this.taskService.markCompleted({ taskId, userId: user.id });
   }
 }
