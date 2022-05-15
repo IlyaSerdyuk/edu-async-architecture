@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { Roles } from 'src/auth/auth-roles.decorator';
-import { UserRoles } from 'src/user/roles.enum';
 
+import { Roles } from '../auth/auth-roles.decorator';
 import { User } from '../auth/auth-user.decorator';
+import { UserRoles } from '../user/roles.enum';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task } from './task.entity';
 import { TaskService } from './task.service';

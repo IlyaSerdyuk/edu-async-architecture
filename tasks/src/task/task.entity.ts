@@ -1,4 +1,3 @@
-import { User } from 'src/user/user.entity';
 import {
   Entity,
   Column,
@@ -7,6 +6,8 @@ import {
   Generated,
   ManyToOne,
 } from 'typeorm';
+
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Task {

@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { UserRoles } from 'src/user/roles.enum';
 
+import { UserRoles } from '../user/roles.enum';
 import { AuthUser } from './auth.entity';
 
 const getTestWorker = () => {

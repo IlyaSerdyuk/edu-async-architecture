@@ -1,4 +1,3 @@
-import { Task } from 'src/task/task.entity';
 import {
   Entity,
   Column,
@@ -7,6 +6,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
+import { Task } from '../task/task.entity';
 import { UserRoles } from './roles.enum';
 
 @Entity()
