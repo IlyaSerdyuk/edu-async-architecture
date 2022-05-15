@@ -47,7 +47,7 @@ export class TaskService {
   }
 
   /** Переназначить исполнителей открытых задач */
-  async shuffle() {
+  async shuffle(): Promise<number> {
     const tasks = await this.taskRepository.find({
       where: {
         completed: IsNull(),
@@ -65,6 +65,8 @@ export class TaskService {
     );
 
     this.taskBroker.assignedGroup(tasks);
+
+    return tasks.length;
   }
 
   /** Отметить выполненной */

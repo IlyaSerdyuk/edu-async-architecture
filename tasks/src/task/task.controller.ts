@@ -4,8 +4,6 @@ import { TaskService } from './task.service';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 
-type SuccessResponse = { status: 'ok' };
-
 @Controller('')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
@@ -26,9 +24,9 @@ export class TaskController {
 
   /** Web API: Переназначить все задачи */
   @Post('shuffle')
-  async shuffle(): Promise<SuccessResponse> {
-    await this.taskService.shuffle();
-    return { status: 'ok' };
+  async shuffle(): Promise<{ complete: number }> {
+    const complete = await this.taskService.shuffle();
+    return { complete };
   }
 
   /** Web API: Отметить выполненной */
