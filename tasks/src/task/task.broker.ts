@@ -18,7 +18,7 @@ export class TaskBroker {
     this.messageBroker.emit('task-stream', {
       key: 'TaskCreated',
       value: {
-        id: task.public_id,
+        public_id: task.public_id,
         title: task.title,
         jira_id: task.jira_id,
       },
@@ -36,8 +36,8 @@ export class TaskBroker {
     this.messageBroker.emit('task-lifecycle', {
       key: 'TaskAssigned',
       value: {
-        task_id: task.public_id,
-        user_id: task.user.public_id,
+        task_public_id: task.public_id,
+        user_public_id: task.user.public_id,
       },
       headers: {
         event_id: `${task.id}-${nanoid()}`,
@@ -55,8 +55,8 @@ export class TaskBroker {
       tasks.map((task) => ({
         key: 'TaskAssigned',
         value: {
-          task_id: task.public_id,
-          user_id: task.user.public_id,
+          task_public_id: task.public_id,
+          user_public_id: task.user.public_id,
         },
         headers: {
           event_id: `${task.id}-${nanoid()}`,
@@ -73,8 +73,8 @@ export class TaskBroker {
     return this.messageBroker.emit('task-lifecycle', {
       key: 'TaskCompleted',
       value: {
-        task_id: task.public_id,
-        user_id: task.user.public_id,
+        task_public_id: task.public_id,
+        user_public_id: task.user.public_id,
       },
       headers: {
         event_id: `${task.id}-${nanoid()}`,
