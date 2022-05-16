@@ -5,6 +5,8 @@ export class TaskCreatedDto {
   @IsUUID()
   id: string;
 
+  jira_id: string;
+
   @IsNotEmpty()
   title: string;
 }

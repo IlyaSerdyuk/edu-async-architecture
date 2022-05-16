@@ -21,6 +21,9 @@ export class Task {
   public_id: string;
 
   @Column()
+  jira_id: string | null;
+
+  @Column()
   title: string;
 
   @CreateDateColumn({ type: 'timestamp' })
