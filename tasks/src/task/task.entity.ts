@@ -18,6 +18,9 @@ export class Task {
   @Generated('uuid')
   public_id: string;
 
+  @Column() // я бы назвал code, но раз в задании jira_id придерживаюсь бизнес-требований
+  jira_id: string | null;
+
   @Column()
   title: string;
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { identity } from 'rxjs';
 import { FindManyOptions, IsNull, Repository } from 'typeorm';
 
 import { UserService } from '../user/user.service';
@@ -35,8 +36,14 @@ export class TaskService {
   /** Добавить задачу */
   async add(createTaskDto: CreateTaskDto): Promise<Task> {
     const user = await this.userService.findRandom();
+    const { jira_id: rowJiraId, title: rowTitle, ...data } = createTaskDto;
+    const [jira_id, title] = rowJiraId
+      ? [rowJiraId, rowTitle]
+      : this.parseTitle(rowTitle);
     const task = await this.taskRepository.save({
-      ...createTaskDto,
+      ...data,
+      jira_id,
+      title,
       user,
     });
 
@@ -44,6 +51,15 @@ export class TaskService {
     this.taskBroker.assigned(task);
 
     return task;
+  }
+
+  private parseTitle(raw: string): [string | null, string] {
+    const regexp = new RegExp('^\[(\d+)\] (.*)$');
+    if (regexp.test(raw)) {
+      const result = [...raw.match(regexp)];
+      return [result[1], result[2]];
+    }
+    return [null, raw];
   }
 
   /** Переназначить исполнителей открытых задач */

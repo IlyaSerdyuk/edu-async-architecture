@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
+import { nanoid } from 'nanoid';
 
 import { Task } from './task.entity';
 
@@ -19,6 +20,13 @@ export class TaskBroker {
       value: {
         id: task.public_id,
         title: task.title,
+        jira_id: task.jira_id,
+      },
+      headers: {
+        event_id: task.id,
+        event_version: 2,
+        event_producer: 'tasks',
+        event_time: new Date(),
       },
     });
   }
@@ -30,6 +38,12 @@ export class TaskBroker {
       value: {
         task_id: task.public_id,
         user_id: task.user.public_id,
+      },
+      headers: {
+        event_id: `${task.id}-${nanoid()}`,
+        event_version: 1,
+        event_producer: 'tasks',
+        event_time: new Date(),
       },
     });
   }
@@ -44,6 +58,12 @@ export class TaskBroker {
           task_id: task.public_id,
           user_id: task.user.public_id,
         },
+        headers: {
+          event_id: `${task.id}-${nanoid()}`,
+          event_version: 1,
+          event_producer: 'tasks',
+          event_time: new Date(),
+        },
       })),
     );
   }
@@ -55,6 +75,12 @@ export class TaskBroker {
       value: {
         task_id: task.public_id,
         user_id: task.user.public_id,
+      },
+      headers: {
+        event_id: `${task.id}-${nanoid()}`,
+        event_version: 1,
+        event_producer: 'tasks',
+        event_time: new Date(),
       },
     });
   }
