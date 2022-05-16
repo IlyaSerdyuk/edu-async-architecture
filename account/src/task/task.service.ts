@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { UserService } from '../user/user.service';
-import { TaskAssignedDto } from './dto/task-assigned.dto';
+import { TaskAssignedDto_v2 } from './dto/task-assigned-v2.dto';
 import { TaskCompletedDto } from './dto/task-completed.dto';
 import { TaskCreatedDto } from './dto/task-created.dto';
 import { Task } from './task.entity';
@@ -17,7 +17,7 @@ export class TaskService {
 
   /** Добавить задачу */
   async create(dto: TaskCreatedDto): Promise<Task> {
-    const task = await this.getByPublicId(dto.id);
+    const task = await this.getByPublicId(dto.public_id);
     task.title = dto.title;
     task.cost_assign = Math.floor(Math.random() * 10 + 10); // rand(10..20)
     task.cost_complete = Math.floor(Math.random() * 20 + 20); // rand(20..40)
@@ -25,9 +25,9 @@ export class TaskService {
   }
 
   /** Назначить исполнителя на задачу */
-  async assign(dto: TaskAssignedDto): Promise<Task> {
-    const task = await this.getByPublicId(dto.task_id);
-    task.user = await this.userService.getByPublicId(dto.user_id);
+  async assign(dto: TaskAssignedDto_v2): Promise<Task> {
+    const task = await this.getByPublicId(dto.task_public_id);
+    task.user = await this.userService.getByPublicId(dto.user_public_id);
 
     /** @todo Стоит завернуть в транзакцию */
     await this.taskRepository.save(task);
@@ -38,7 +38,7 @@ export class TaskService {
 
   /** Отметить задачу закрытой */
   async complete(dto: TaskCompletedDto): Promise<Task> {
-    const task = await this.getByPublicId(dto.task_id);
+    const task = await this.getByPublicId(dto.task_public_id);
     task.completed_at = dto.completed_at;
 
     /** @todo Стоит завернуть в транзакцию */

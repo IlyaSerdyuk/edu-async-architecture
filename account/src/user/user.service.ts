@@ -23,7 +23,7 @@ export class UserService {
 
   /** Добавить пользователя */
   async create(dto: UserCreatedDto): Promise<User> {
-    const user = await this.getByPublicId(dto.id);
+    const user = await this.getByPublicId(dto.public_id);
     user.name = dto.name;
     user.role = dto.role;
     user.email = dto.email;

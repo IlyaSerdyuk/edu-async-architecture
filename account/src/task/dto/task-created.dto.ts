@@ -3,7 +3,7 @@ import { IsNotEmpty, IsUUID } from 'class-validator';
 export class TaskCreatedDto {
   @IsNotEmpty()
   @IsUUID()
-  id: string;
+  public_id: string;
 
   jira_id: string;
 

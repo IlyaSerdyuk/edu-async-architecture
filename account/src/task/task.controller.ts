@@ -1,6 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { Ctx, KafkaContext, MessagePattern } from '@nestjs/microservices';
 
+import { TaskAssignedDto_v2 } from './dto/task-assigned-v2.dto';
 import { TaskAssignedDto } from './dto/task-assigned.dto';
 import { TaskCompletedDto } from './dto/task-completed.dto';
 import { TaskCreatedDto } from './dto/task-created.dto';
@@ -30,7 +31,19 @@ export class TaskController {
     const message = context.getMessage();
     switch (`${message.key}`) {
       case 'TaskAssigned':
-        this.taskService.assign(message.value as unknown as TaskAssignedDto);
+        if (message.headers?.event_version === '2') {
+          this.taskService.assign(
+            message.value as unknown as TaskAssignedDto_v2,
+          );
+        } else {
+          const { task_id, user_id, ...value } =
+            message.value as unknown as TaskAssignedDto;
+          this.taskService.assign({
+            ...value,
+            task_public_id: task_id,
+            user_public_id: user_id,
+          } as unknown as TaskAssignedDto_v2);
+        }
         break;
       case 'TaskCompleted':
         this.taskService.complete(message.value as unknown as TaskCompletedDto);

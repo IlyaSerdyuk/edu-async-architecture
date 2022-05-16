@@ -17,8 +17,8 @@ export class AccountBroker {
     this.messageBroker.emit('account-stream', {
       key: 'AccountDebit',
       value: {
-        user_id: transaction.user.public_id,
-        task_id: transaction.task.public_id,
+        user_public_id: transaction.user.public_id,
+        task_public_id: transaction.task.public_id,
         amount: transaction.debit,
       },
       headers: {
@@ -35,8 +35,8 @@ export class AccountBroker {
     this.messageBroker.emit('account-stream', {
       key: 'AccountCredit',
       value: {
-        user_id: transaction.user.public_id,
-        task_id: transaction.task.public_id,
+        user_public_id: transaction.user.public_id,
+        task_public_id: transaction.task.public_id,
         amount: transaction.credit,
       },
       headers: {
@@ -53,7 +53,7 @@ export class AccountBroker {
     this.messageBroker.emit('account-stream', {
       key: 'AccountPaid',
       value: {
-        user_id: transaction.user.public_id,
+        user_public_id: transaction.user.public_id,
         amount: transaction.credit,
       },
       headers: {

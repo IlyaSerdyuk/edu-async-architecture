@@ -3,7 +3,7 @@ import { IsNotEmpty, IsUUID } from 'class-validator';
 export class UserCreatedDto {
   @IsNotEmpty()
   @IsUUID()
-  id: string;
+  public_id: string;
 
   @IsNotEmpty()
   name: string;
