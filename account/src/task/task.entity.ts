@@ -1,4 +1,3 @@
-import { User } from 'src/user/user.entity';
 import {
   Entity,
   Column,
@@ -6,7 +5,11 @@ import {
   CreateDateColumn,
   Generated,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
+
+import { Transaction } from '../user/transaction.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Task {
@@ -28,4 +31,13 @@ export class Task {
 
   @ManyToOne(() => User, (user) => user.tasks)
   user: User;
+
+  @Column()
+  cost_assign: number;
+
+  @Column()
+  cost_complete: number;
+
+  @OneToMany(() => Transaction, (transaction) => transaction.task)
+  transactions: Transaction[];
 }

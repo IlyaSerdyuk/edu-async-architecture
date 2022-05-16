@@ -19,6 +19,8 @@ export class TaskService {
   async create(dto: TaskCreatedDto): Promise<Task> {
     const task = await this.getByPublicId(dto.id);
     task.title = dto.title;
+    task.cost_assign = Math.floor(Math.random() * 10 + 10); // rand(10..20)
+    task.cost_complete = Math.floor(Math.random() * 20 + 20); // rand(20..40)
     return this.taskRepository.save(task);
   }
 
@@ -26,14 +28,24 @@ export class TaskService {
   async assign(dto: TaskAssignedDto): Promise<Task> {
     const task = await this.getByPublicId(dto.task_id);
     task.user = await this.userService.getByPublicId(dto.user_id);
-    return this.taskRepository.save(task);
+
+    /** @todo Стоит завернуть в транзакцию */
+    await this.taskRepository.save(task);
+    await this.userService.assign(task);
+
+    return task;
   }
 
   /** Отметить задачу закрытой */
   async complete(dto: TaskCompletedDto): Promise<Task> {
     const task = await this.getByPublicId(dto.task_id);
     task.completed_at = dto.completed_at;
-    return this.taskRepository.save(task);
+
+    /** @todo Стоит завернуть в транзакцию */
+    await this.taskRepository.save(task);
+    await this.userService.complete(task);
+
+    return task;
   }
 
   /** Найти или создать задачу по публичному идентификатору */
