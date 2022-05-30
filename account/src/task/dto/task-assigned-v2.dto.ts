@@ -7,5 +7,5 @@ export class TaskAssignedDto_v2 {
 
   @IsNotEmpty()
   @IsUUID()
-  user_public_id: string;
+  assignee_public_id: string;
 }

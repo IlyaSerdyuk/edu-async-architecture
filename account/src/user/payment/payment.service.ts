@@ -6,7 +6,7 @@ import { User } from '../user.entity';
 import { Payment } from './payment.entity';
 
 @Injectable()
-export class TaskService {
+export class PaymentService {
   constructor(
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,

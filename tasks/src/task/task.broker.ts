@@ -37,7 +37,7 @@ export class TaskBroker {
       key: 'TaskAssigned',
       value: {
         task_public_id: task.public_id,
-        user_public_id: task.user.public_id,
+        assignee_public_id: task.assignee.public_id,
       },
       headers: {
         event_id: `${task.id}-${nanoid()}`,
@@ -56,7 +56,7 @@ export class TaskBroker {
         key: 'TaskAssigned',
         value: {
           task_public_id: task.public_id,
-          user_public_id: task.user.public_id,
+          assignee_public_id: task.assignee.public_id,
         },
         headers: {
           event_id: `${task.id}-${nanoid()}`,
@@ -74,7 +74,7 @@ export class TaskBroker {
       key: 'TaskCompleted',
       value: {
         task_public_id: task.public_id,
-        user_public_id: task.user.public_id,
+        completed_by_public_id: task.assignee.public_id,
       },
       headers: {
         event_id: `${task.id}-${nanoid()}`,

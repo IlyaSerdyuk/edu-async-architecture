@@ -6,7 +6,7 @@ import { Task } from '../task/task.entity';
 import { AccountBroker } from './account.broker';
 import { UserCreatedDto } from './dto/user-created.dto';
 import { Payment } from './payment/payment.entity';
-import { Transaction } from './transaction.entity';
+import { TransactionService } from './transaction/transaction.service';
 import { User } from './user.entity';
 
 @Injectable()
@@ -14,11 +14,10 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Transaction)
-    private readonly transactionRepository: Repository<Transaction>,
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
     private readonly accountBroker: AccountBroker,
+    private readonly transactionService: TransactionService,
   ) {}
 
   /** Добавить пользователя */
@@ -38,40 +37,27 @@ export class UserService {
 
   /** Провести назначение исполнителя на задачу */
   async assign(task: Task) {
-    const debit = task.cost_assign;
-    const user = task.user;
-    const after_balance = user.balance - debit;
-
-    const transaction = await this.transactionRepository.save({
+    const user = task.assignee;
+    const transaction = await this.transactionService.applyDeposit({
       user,
       task,
-      debit,
-      after_balance,
+      cost: task.cost_assign,
+      description: `Task ${task.public_id} assigned to worker ${user.public_id}`,
     });
 
-    user.balance = after_balance;
-    await this.userRepository.save(user);
-
-    this.accountBroker.debit(transaction);
+    this.accountBroker.withdraw(transaction);
   }
 
   /** Провести закрытие задачи исполнителем */
   async complete(task: Task) {
-    const credit = task.cost_complete;
-    const user = task.user;
-    const after_balance = user.balance + credit;
-
-    const transaction = await this.transactionRepository.save({
+    const user = task.assignee;
+    const transaction = await this.transactionService.applyWithdraw({
       user,
       task,
-      credit,
-      after_balance,
+      cost: task.cost_complete,
+      description: `Task ${task.public_id} completed worker ${user.public_id}`,
     });
-
-    user.balance = after_balance;
-    this.userRepository.save(user);
-
-    this.accountBroker.credit(transaction);
+    this.accountBroker.deposit(transaction);
   }
 
   /** Заказать выплату пользователю */

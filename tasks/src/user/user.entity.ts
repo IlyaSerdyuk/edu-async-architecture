@@ -24,6 +24,6 @@ export class User {
   @Column()
   role: UserRoles | string;
 
-  @OneToMany(() => Task, (task) => task.user)
+  @OneToMany(() => Task, (task) => task.assignee)
   tasks: Task[];
 }

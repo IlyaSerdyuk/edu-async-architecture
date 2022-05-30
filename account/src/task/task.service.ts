@@ -24,10 +24,12 @@ export class TaskService {
     return this.taskRepository.save(task);
   }
 
-  /** Назначить исполнителя на задачу */
+  /** Указать исполнителя на задачу */
   async assign(dto: TaskAssignedDto_v2): Promise<Task> {
     const task = await this.getByPublicId(dto.task_public_id);
-    task.user = await this.userService.getByPublicId(dto.user_public_id);
+    task.assignee = await this.userService.getByPublicId(
+      dto.assignee_public_id,
+    );
 
     /** @todo Стоит завернуть в транзакцию */
     await this.taskRepository.save(task);

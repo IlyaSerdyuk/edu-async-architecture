@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { identity } from 'rxjs';
 import { FindManyOptions, IsNull, Repository } from 'typeorm';
 
 import { UserService } from '../user/user.service';
@@ -24,7 +23,7 @@ export class TaskService {
   async findAll(user?: string): Promise<Task[]> {
     const options: FindManyOptions<Task> = {
       where: {
-        completed: IsNull(),
+        completed_at: IsNull(),
       },
     };
     if (user) {
@@ -74,8 +73,7 @@ export class TaskService {
     // В боевом проекте я бы оптимизировал выборку/назначение пользователей
     await Promise.all(
       tasks.map(async (task) => {
-        const user = await this.userService.findRandom();
-        task.user = user;
+        task.assignee = await this.userService.findRandom();
         await this.taskRepository.save(task);
       }),
     );
@@ -92,16 +90,16 @@ export class TaskService {
       throw new Error('Task not found');
     }
 
-    if (task.user !== userId) {
+    if (task.assignee !== userId) {
       throw new Error('Forbidden');
     }
 
-    if (task.completed) {
+    if (task.completed_at) {
       // Возможно, стоит как-то особенно обрабатывать задвоение
       return 0;
     }
 
-    task.completed = new Date();
+    task.completed_at = new Date();
 
     await this.taskRepository.save(task);
     this.taskBroker.completed(task);

@@ -2,17 +2,22 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  Generated,
   ManyToOne,
   Column,
 } from 'typeorm';
 
-import { Task } from '../task/task.entity';
-import { User } from './user.entity';
+import { Task } from '../../task/task.entity';
+import { User } from '../user.entity';
 
 @Entity()
 export class Transaction {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  @Generated('uuid')
+  public_id: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
@@ -31,4 +36,7 @@ export class Transaction {
 
   @Column()
   after_balance: number;
+
+  @Column()
+  description: string;
 }

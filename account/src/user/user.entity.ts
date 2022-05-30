@@ -31,7 +31,7 @@ export class User {
   @Column({ default: 0 })
   balance: number;
 
-  @OneToMany(() => Task, (task) => task.user)
+  @OneToMany(() => Task, (task) => task.assignee)
   tasks: Task[];
 
   @OneToMany(() => AuthUser, (session) => session.user)

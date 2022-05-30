@@ -7,5 +7,5 @@ export class TaskAssignedDto {
 
   @IsNotEmpty()
   @IsUUID()
-  user_id: string;
+  assignee_id: string;
 }

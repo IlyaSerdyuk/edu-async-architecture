@@ -7,7 +7,7 @@ export class TaskCompletedDto {
 
   @IsNotEmpty()
   @IsUUID()
-  user_public_id: string;
+  completed_by_public_id: string;
 
   @IsNotEmpty()
   completed_at: Date;

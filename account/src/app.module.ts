@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Task } from './task/task.entity';
-import { Transaction } from './user/transaction.entity';
+import { Transaction } from './user/transaction/transaction.entity';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 

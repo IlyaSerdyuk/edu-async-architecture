@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 
-import { Transaction } from './transaction.entity';
+import { Transaction } from './transaction/transaction.entity';
 
 /**
  * Брокер для взаимодействия к Kafka.
@@ -13,13 +13,16 @@ export class AccountBroker {
   ) {}
 
   /** Отправить BL-событие о списании средств на счета пользователя */
-  debit(transaction: Transaction) {
+  withdraw(transaction: Transaction) {
     this.messageBroker.emit('account-stream', {
-      key: 'AccountDebit',
+      key: 'WithdrawTransactionApplied',
       value: {
+        transaction_public_id: transaction.public_id,
+        transaction_at: transaction.created_at,
         user_public_id: transaction.user.public_id,
         task_public_id: transaction.task.public_id,
-        amount: transaction.debit,
+        debit: transaction.debit,
+        description: transaction.description,
       },
       headers: {
         event_id: transaction.id,
@@ -31,13 +34,16 @@ export class AccountBroker {
   }
 
   /** Отправить BL-событие о зачисление средств на счет пользователя */
-  credit(transaction: Transaction) {
+  deposit(transaction: Transaction) {
     this.messageBroker.emit('account-stream', {
-      key: 'AccountCredit',
+      key: 'DepositTransactionApplied',
       value: {
+        transaction_public_id: transaction.public_id,
+        transaction_at: transaction.created_at,
         user_public_id: transaction.user.public_id,
         task_public_id: transaction.task.public_id,
-        amount: transaction.credit,
+        credit: transaction.credit,
+        description: transaction.description,
       },
       headers: {
         event_id: transaction.id,
@@ -51,10 +57,13 @@ export class AccountBroker {
   /** Отправить BL-событие о выплате средств пользователю */
   paid(transaction: Transaction) {
     this.messageBroker.emit('account-stream', {
-      key: 'AccountPaid',
+      key: 'PaymentTransactionApplied',
       value: {
+        transaction_public_id: transaction.public_id,
+        transaction_at: transaction.created_at,
         user_public_id: transaction.user.public_id,
         amount: transaction.credit,
+        description: transaction.description,
       },
       headers: {
         event_id: transaction.id,

@@ -5,7 +5,7 @@ import { Roles } from '../auth/auth-roles.decorator';
 import { User } from '../auth/auth-user.decorator';
 import { AuthUser } from '../auth/auth.entity';
 import { UserRoles } from '../user/roles.enum';
-import { AccountService } from './acount.service';
+import { AccountService } from './account.service';
 
 @Controller('')
 export class AccountController {

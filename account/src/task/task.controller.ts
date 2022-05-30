@@ -36,12 +36,12 @@ export class TaskController {
             message.value as unknown as TaskAssignedDto_v2,
           );
         } else {
-          const { task_id, user_id, ...value } =
+          const { task_id, assignee_id, ...value } =
             message.value as unknown as TaskAssignedDto;
           this.taskService.assign({
             ...value,
             task_public_id: task_id,
-            user_public_id: user_id,
+            assignee_public_id: assignee_id,
           } as unknown as TaskAssignedDto_v2);
         }
         break;

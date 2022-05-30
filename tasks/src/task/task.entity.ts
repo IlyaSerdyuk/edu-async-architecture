@@ -28,8 +28,8 @@ export class Task {
   created_at: Date;
 
   @Column({ type: 'timestamp', nullable: true })
-  completed: Date;
+  completed_at: Date;
 
   @ManyToOne(() => User, (user) => user.tasks)
-  user: User;
+  assignee: User;
 }

@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import { Transaction } from '../user/transaction.entity';
+import { Transaction } from '../user/transaction/transaction.entity';
 import { User } from '../user/user.entity';
 
 @Entity()
@@ -32,8 +32,8 @@ export class Task {
   @Column({ type: 'timestamp', nullable: true })
   completed_at: Date;
 
-  @ManyToOne(() => User, (user) => user.tasks)
-  user: User;
+  @ManyToOne(() => User, (assignee) => assignee.tasks)
+  assignee: User;
 
   @Column()
   cost_assign: number;

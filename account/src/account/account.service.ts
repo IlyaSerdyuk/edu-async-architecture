@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { Repository } from 'typeorm';
 
 import { Payment } from '../user/payment/payment.entity';
-import { Transaction } from '../user/transaction.entity';
+import { Transaction } from '../user/transaction/transaction.entity';
 import { User } from '../user/user.entity';
 
 /** Сервис для просмотра данных по начислениям и выплатам */
