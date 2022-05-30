@@ -1,3 +1,4 @@
+import { AuthUser } from 'src/auth/auth.entity';
 import {
   Entity,
   Column,
@@ -24,6 +25,15 @@ export class User {
   @Column()
   role: UserRoles | string;
 
+  @Column()
+  email: string;
+
+  @Column({ default: 0 })
+  balance: number;
+
   @OneToMany(() => Task, (task) => task.assignee)
   tasks: Task[];
+
+  @OneToMany(() => AuthUser, (session) => session.user)
+  sessions: AuthUser[];
 }

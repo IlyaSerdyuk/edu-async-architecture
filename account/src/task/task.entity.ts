@@ -5,8 +5,10 @@ import {
   CreateDateColumn,
   Generated,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 
+import { Transaction } from '../user/transaction/transaction.entity';
 import { User } from '../user/user.entity';
 
 @Entity()
@@ -18,7 +20,7 @@ export class Task {
   @Generated('uuid')
   public_id: string;
 
-  @Column() // я бы назвал code, но раз в задании jira_id придерживаюсь бизнес-требований
+  @Column()
   jira_id: string | null;
 
   @Column()
@@ -30,6 +32,15 @@ export class Task {
   @Column({ type: 'timestamp', nullable: true })
   completed_at: Date;
 
-  @ManyToOne(() => User, (user) => user.tasks)
+  @ManyToOne(() => User, (assignee) => assignee.tasks)
   assignee: User;
+
+  @Column()
+  cost_assign: number;
+
+  @Column()
+  cost_complete: number;
+
+  @OneToMany(() => Transaction, (transaction) => transaction.task)
+  transactions: Transaction[];
 }
